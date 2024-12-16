@@ -13,8 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
-import firebase_admin
-from firebase_admin import credentials
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -77,8 +76,6 @@ LOGIN_REDIRECT_URL = 'home'  # Dirección a la que redirigir después del login
 
 
 
-firebase_cred = credentials.Certificate(r"C:\Users\matia\Desktop\DjangoProjects\comercialmeor\xd\credentials.json")
-firebase_admin.initialize_app(firebase_cred)
 
 
 MIDDLEWARE = [
