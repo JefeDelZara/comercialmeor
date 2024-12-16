@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Reporte de Pedidos</h2>
+        
+        <form method="get" action="{% url 'reportes:reporte_pedidos' %}">
+            <div class="form-group">
+                <label for="fecha_inicio">Fecha de Inicio</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="fecha_fin">Fecha de Fin</label>
+                <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        </form>
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Pedido ID</th>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                    <tr>
+                        <td>{{ pedido.id }}</td>
+                        <td>{{ pedido.usuario.username }}</td>
+                        <td>{{ pedido.fecha_pedido }}</td>
+                        <td>{{ pedido.total }}</td>
+                        <td>{{ pedido.estado }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

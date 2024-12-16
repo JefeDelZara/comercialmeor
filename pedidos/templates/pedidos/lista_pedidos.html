@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Pedidos</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Usuario</th>
+            <th>Total Productos</th>
+            <th>Subtotal</th>
+            <th>Estado</th>
+            {% if user.is_staff %}<th>Acciones</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for pedido in pedidos %}
+        <tr>
+            <td>{{ pedido.id }}</td>
+            <td>{{ pedido.fecha_hora|date:"d M Y H:i" }}</td>
+            <td>
+                {{ pedido.usuario.username }}<br>
+                {{ pedido.usuario.email }}<br>
+                {{ pedido.usuario.cliente.telefono }}
+            </td>
+            <td>{{ pedido.total_productos }}</td>
+            <td>${{ pedido.subtotal }}</td>
+            <td>
+                {% if pedido.estado == "Pendiente" %}
+                    <span class="badge bg-warning">Pendiente</span>
+                {% elif pedido.estado == "En camino" %}
+                    <span class="badge bg-success">En camino</span>
+                {% elif pedido.estado == "Entregado" %}
+                    <span class="badge bg-primary">Entregado</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'factura:generar_factura' pedido.id %}" class="btn btn-primary">Descargar Factura</a>
+                <a href="{% url 'pedidos:ver_pedido' pedido.id %}" class="btn btn-info btn-sm">Ver Pedido</a>
+            </td>
+            {% if user.is_staff %}
+            <td>
+                <a href="{% url 'pedidos:editar_pedido' pedido.id %}" class="btn btn-sm btn-primary">Editar</a>
+                <form action="{% url 'pedidos:eliminar_pedido' pedido.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

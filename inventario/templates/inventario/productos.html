@@ -1,0 +1,139 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de productos</h2>
+    <link rel="stylesheet" href="{% static 'css/stylo.css' %}">
+
+    <!-- Filtrado y búsqueda -->
+    <form method="GET" class="mb-4">
+        <div class="row">
+            <!-- Barra de búsqueda -->
+            <div class="col-md-4">
+                <label for="buscar" class="form-label">Buscar producto</label>
+                <input type="text" name="buscar" id="buscar" class="form-control" placeholder="Ingrese el nombre del producto" value="{{ request.GET.buscar }}">
+            </div>
+
+            <!-- Filtro por categoría -->
+            <div class="col-md-3">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select name="categoria" id="categoria" class="form-select">
+                    <option value="">Selecciona categoría</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
+                            {{ categoria.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Filtro por orden -->
+            <div class="col-md-3">
+                <label for="ordenar" class="form-label">Ordenar por</label>
+                <select name="ordenar" id="ordenar" class="form-select">
+                    <option value="">Ordenar por</option>
+                    <option value="mayor_stock" {% if request.GET.ordenar == "mayor_stock" %}selected{% endif %}>Mayor stock</option>
+                    <option value="menor_stock" {% if request.GET.ordenar == "menor_stock" %}selected{% endif %}>Menor stock</option>
+                </select>
+            </div>
+
+            <!-- Productos agotados -->
+            <div class="col-md-2 d-flex align-items-end">
+                <div class="form-check me-3">
+                    <input type="checkbox" class="form-check-input" id="agotado" name="agotado" value="true" {% if request.GET.agotado == "true" %}checked{% endif %}>
+                    <label for="agotado" class="form-check-label">Agotados</label>
+                </div>
+                <button class="btn btn-primary">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+
+
+ <form method="get" action="{% url 'inventario:producto_list' %}">
+        <!-- Otros filtros como la búsqueda y categorías -->
+        <label for="alertas_stock">Mostrar alertas de stock bajo:</label>
+        <select name="alertas_stock" id="alertas_stock" onchange="this.form.submit()">
+            <option value="true" {% if alertas_stock == 'true' %}selected{% endif %}>Activar</option>
+            <option value="false" {% if alertas_stock == 'false' %}selected{% endif %}>Desactivar</option>
+        </select>
+</form>
+
+
+    <!-- Listado de productos -->
+    <div class="filters mb-3">
+        <a href="?bajo_stock=true" class="btn btn-warning btn-sm">Ver productos con bajo stock</a>
+        <a href="?" class="btn btn-secondary btn-sm">Ver todos los productos</a>
+        <a href="{% url 'inventario:reporte_productos' %}" class="btn btn-primary">Generar reporte de productos</a>
+    </div>
+    
+    <div class="row">
+        {% for producto in productos %}
+            <div class="col-md-4 mb-4">
+                <!-- Enlace a la página de detalle del producto -->
+                <a href="{% url 'inventario:detalle_producto' producto.id %}" class="card-link">
+                    <div class="card h-100">
+                        <!-- Mostrar imagen del producto o imagen predeterminada -->
+                        <img src="{{ producto.imagen1.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre }}</h5>
+                            <p class="card-text"><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+                            <p class="card-text"><strong>Stock:</strong> {{ producto.stock }}</p>
+                            <p class="card-text"><strong>Precio:</strong> ${{ producto.precio_venta }}</p>
+    
+                            <!-- Aviso de stock bajo solo si las alertas están activadas y el stock es bajo -->
+                        {% if alertas_stock == 'true' %}
+                            {% if producto.stock <= producto.stock_minimo or producto.stock_minimo is none %}
+                                <p class="text-danger font-weight-bold mt-2">¡Stock bajo!</p>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                        
+                        <!-- Footer de la tarjeta con los botones de editar y eliminar -->
+                        <div class="card-footer text-end text-center">
+                            {% if user.is_staff %}
+                                <a href="{% url 'inventario:editar_producto' producto.id %}" class="btn btn-warning btn-sm me-2">Editar</a>
+                                <a href="{% url 'inventario:eliminar_producto' producto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No hay productos disponibles con los criterios seleccionados.</p>
+            </div>
+        {% endfor %}
+    </div>
+    
+      
+
+    <!-- Paginación -->
+    <div class="col-md-12">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if not productos.has_previous %}disabled{% endif %}">
+                    <a class="page-link" href="?page={{ productos.previous_page_number }}" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item {% if productos.number == 1 %}active{% endif %}">
+                    <a class="page-link" href="?page=1">1</a>
+                </li>
+                {% if productos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ productos.next_page_number }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Acciones adicionales -->
+    {% if user.is_staff %}
+        <div class="mt-4">
+            <a href="{% url 'inventario:crear_producto' %}" class="btn btn-success">Agregar producto</a>
+            <small class="text-muted ms-2">Si no encuentras tu categoría, puedes crear una nueva.</small>
+            <a href="{% url 'inventario:crear_categoria' %}" class="btn btn-link btn-sm">Crear Nueva Categoría</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

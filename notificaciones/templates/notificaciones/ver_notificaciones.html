@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Mis Notificaciones</h2>
+        <ul>
+            {% for notificacion in notificaciones %}
+                <li class="{% if notificacion.leido %}leido{% else %}no-leido{% endif %}">
+                    <p>{{ notificacion.mensaje }}</p>
+                    <small>{{ notificacion.fecha_creacion }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<!-- notificaciones/templates/notificaciones/mis_notificaciones.html -->
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mis Notificaciones</h2>
+    <ul>
+        {% for notificacion in notificaciones %}
+            <li>
+                <p>{{ notificacion.mensaje }}</p>
+                <p>Fecha: {{ notificacion.fecha_creacion }}</p>
+            </li>
+        {% empty %}
+            <p>No tienes notificaciones.</p>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

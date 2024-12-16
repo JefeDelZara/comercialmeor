@@ -1,0 +1,66 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">Detalles del Pedido</h2>
+            </div>
+            <div class="card-body">
+                <h3 class="mb-4">Pedido #{{ pedido.id }}</h3>
+                <p><strong>Fecha:</strong> {{ pedido.fecha_hora|date:"d M Y H:i" }}</p>
+                <p><strong>Usuario:</strong> {{ pedido.usuario.username }} ({{ pedido.usuario.email }})</p>
+                <p><strong>Teléfono:</strong> {{ pedido.usuario.cliente.telefono }}</p>
+
+                <div class="mt-4">
+                    <h5>Estado del Pedido:</h5>
+                    <div class="badge 
+                        {% if pedido.estado == 'pendiente' %} bg-warning {% endif %}
+                        {% if pedido.estado == 'en_camino' %} bg-success {% endif %}
+                        {% if pedido.estado == 'entregado' %} bg-primary {% endif %}">
+                        {{ pedido.estado|capfirst }}
+                    </div>
+                </div>
+
+                <h4 class="mt-4">Productos en el Pedido:</h4>
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pedido.detallepedido_set.all %}
+                            <tr>
+                                <td>{{ item.producto.nombre }}</td>
+                                <td>{{ item.cantidad }}</td>
+                                <td>${{ item.producto.precio_venta }}</td>
+                                <td>${{ item.total_producto }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <p><strong>Total Productos:</strong> {{ pedido.total_productos }}</p>
+                    <p><strong>Subtotal:</strong> ${{ pedido.subtotal }}</p>
+                </div>
+
+                {% if user.is_staff %}
+                    <div class="mt-4">
+                        <form method="POST" action="{% url 'pedidos:eliminar_pedido' pedido.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar Pedido</button>
+                        </form>
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'pedidos:lista_pedidos' %}" class="btn btn-secondary mt-4">Volver a la lista de pedidos</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

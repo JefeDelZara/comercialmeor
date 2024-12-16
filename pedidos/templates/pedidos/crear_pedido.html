@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Crear Pedido</h1>
+<form method="POST">
+    {% csrf_token %}
+    <!-- Aquí debería ir un formulario para seleccionar productos -->
+    <button type="submit" class="btn btn-primary">Confirmar Pedido</button>
+</form>
+{% endblock %}

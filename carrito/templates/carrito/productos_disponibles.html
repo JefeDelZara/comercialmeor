@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de productos</h2>
+    <link rel="stylesheet" href="{% static 'css/stylo.css' %}">
+
+
+
+
+
+
+
+    <!-- Filtro de búsqueda -->
+    <form method="GET" class="mb-4">
+        <div class="row">
+            <!-- Barra de búsqueda -->
+            <div class="col-md-4">
+                <label for="search" class="form-label">Buscar producto</label>
+                <input type="text" name="search" id="search" class="form-control" placeholder="Buscar por nombre" value="{{ request.GET.search }}">
+            </div>
+
+            <!-- Filtro por categoría -->
+            <div class="col-md-3">
+                <label for="categoria" class="form-label">Categoría</label>
+                <select name="categoria" id="categoria" class="form-select">
+                    <option value="">Selecciona categoría</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}" {% if request.GET.categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
+                            {{ categoria.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Botón de filtrar -->
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+
+
+    
+
+    <!-- Listado de productos -->
+    <div class="row">
+        {% if productos %}
+            {% for producto in productos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <!-- Enlace que lleva a la página de detalles del producto -->
+                        <a href="{% url 'inventario:detalle_producto' producto.id %}">
+                            <!-- Mostrar la primera imagen -->
+                            <img src="{{ producto.imagen1.url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ producto.nombre }}</h5>
+                                <p class="card-text">Precio: ${{ producto.precio_venta }}</p>
+                                <p class="card-text">Stock: {{ producto.stock }}</p>
+                                
+                            </div>
+                        </a>
+
+                        <!-- Footer de la tarjeta con los botones de editar y eliminar -->
+                        
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-warning mt-3" role="alert">
+                No hay productos disponibles con los criterios de búsqueda seleccionados.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Acciones adicionales para administradores -->
+
+</div>
+{% endblock %}

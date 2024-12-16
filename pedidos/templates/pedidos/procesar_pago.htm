@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Proceso de Pago</h1>
+
+{% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<p>Por favor, complete los detalles de pago para procesar su pedido.</p>
+
+<form method="POST">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="tarjeta_numero" class="form-label">Número de Tarjeta</label>
+        <input type="text" class="form-control" id="tarjeta_numero" name="tarjeta_numero" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="fecha_expiracion" class="form-label">Fecha de Expiración</label>
+        <input type="month" class="form-control" id="fecha_expiracion" name="fecha_expiracion" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="codigo_seguridad" class="form-label">Código de Seguridad (CVV)</label>
+        <input type="text" class="form-control" id="codigo_seguridad" name="codigo_seguridad" required>
+    </div>
+    
+    <div class="mb-3">
+        <label for="direccion_facturacion" class="form-label">Dirección de Facturación</label>
+        <input type="text" class="form-control" id="direccion_facturacion" name="direccion_facturacion" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Pagar</button>
+</form>
+
+{% endblock %}

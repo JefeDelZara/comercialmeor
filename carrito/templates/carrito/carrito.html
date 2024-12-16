@@ -1,0 +1,82 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="cart-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="cart-page-inner">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody class="align-middle">
+                                {% for item in carrito.items.all %}
+                                <tr>
+                                    <td>
+                                        <div class="img">
+                                            <a href="#"><img src="{{ item.producto.imagen1.url }}" alt="{{ item.producto.nombre }}"></a>
+                                            <p>{{ item.producto.nombre }}</p>
+                                        </div>
+                                    </td>
+                                    <td>${{ item.producto.precio_venta }}</td>
+                                    <td>
+                                        <form method="POST" class="d-inline">
+                                            {% csrf_token %}
+                                            <div class="qty">
+                                                <button class="btn-minus" type="submit" formaction="{% url 'carrito:reducir_cantidad' item.id %}"><i class="fa fa-minus"></i></button>
+                                                <input type="text" value="{{ item.cantidad }}" readonly>
+                                                <button class="btn-plus" type="submit" formaction="{% url 'carrito:aumentar_cantidad' item.id %}"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                        </form>
+                                    </td>
+                                    <td>${{ item.total }}</td>
+                                    <td>
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" formaction="{% url 'carrito:eliminar_producto' item.id %}"><i class="fa fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No hay productos en el carrito.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="cart-summary">
+                                <div class="cart-content">
+                                    <h1>Resumen del Carrito</h1>
+                                    
+                                    <h2>Total<span>${{ carrito.total }}</span></h2>
+                                </div>
+                                <div class="cart-btn">
+                                    <a href="{% url 'carrito:actualizar_carrito' %}" class="btn btn-primary">Actualizar Carrito</a>
+                                    {% if carrito.items.exists %}
+                                        <a href="{% url 'carrito:realizar_pedido' %}" class="btn btn-success">Proceder al Pago</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

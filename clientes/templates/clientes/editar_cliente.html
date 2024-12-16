@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Editar Cliente</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <h3>Datos del Usuario</h3>
+    {{ form.first_name }}  <!-- Nombre -->
+    {{ form.last_name }}   <!-- Apellido -->
+
+    <h3>Datos del Cliente</h3>
+    {{ form.telefono }}    <!-- Teléfono -->
+    {{ form.direccion }}   <!-- Dirección -->
+
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+</form>
+
+{% endblock %}

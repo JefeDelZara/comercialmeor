@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>Editar Pedido</h1>
+<form method="POST">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="estado" class="form-label">Estado del pedido</label>
+        <select name="estado" id="estado" class="form-select">
+            <option value="Pendiente" {% if pedido.estado == "Pendiente" %}selected{% endif %}>Pendiente</option>
+            <option value="En camino" {% if pedido.estado == "En camino" %}selected{% endif %}>En camino</option>
+            <option value="Entregado" {% if pedido.estado == "Entregado" %}selected{% endif %}>Entregado</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Actualizar</button>
+</form>
+{% endblock %}

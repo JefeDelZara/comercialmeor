@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        .order-details {
+            border-top: 2px solid #f1f1f1;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+        .order-details p {
+            font-size: 16px;
+        }
+        .order-item {
+            border-bottom: 1px solid #f1f1f1;
+            padding: 10px 0;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .item-name {
+            font-weight: bold;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>¡Tu pedido ha sido realizado con éxito!</h2>
+        <p>Estimado {{ user.username }},</p>
+        <p>Gracias por tu compra. Aquí están los detalles de tu pedido:</p>
+        
+        <div class="order-details">
+            <h3>Detalles del Pedido:</h3>
+            {% for detalle in pedido.detallepedido_set.all %}
+                <div class="order-item">
+                    <p class="item-name">{{ detalle.producto.nombre }}</p>
+                    <p>Cantidad: {{ detalle.cantidad }}</p>
+                    <p>Precio Unitario: ${{ detalle.producto.precio_venta }}</p>
+                    <p>Subtotal: ${{ detalle.total_producto }}</p>
+                </div>
+            {% endfor %}
+            <p class="total">Total Productos: {{ pedido.total_productos }}</p>
+            <p class="total">Subtotal: ${{ pedido.subtotal }}</p>
+        </div>
+
+        <p>Tu pedido será procesado y enviado en breve. Si tienes alguna duda, no dudes en contactarnos.</p>
+        <p>Gracias por elegirnos.</p>
+    </div>
+</body>
+</html>

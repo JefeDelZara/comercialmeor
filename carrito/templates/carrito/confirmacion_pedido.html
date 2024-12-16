@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Confirmación de Pedido</h2>
+    
+    <div class="alert alert-success">
+        <strong>¡Gracias por tu compra!</strong> Tu pedido ha sido realizado con éxito.
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h4>Detalles del Pedido</h4>
+            <p><strong>Pedido ID:</strong> {{ pedido.id }}</p>
+            <p><strong>Cliente:</strong> {{ pedido.usuario.nombre }} ({{ pedido.usuario.email }})</p>
+            <p><strong>Fecha y Hora:</strong> {{ pedido.fecha_hora }}</p>
+            <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+        </div>
+        
+        <div class="col-md-6">
+            <h4>Resumen de Productos</h4>
+            <ul class="list-group">
+                {% for detalle in pedido.detallepedido_set.all %}
+                    <li class="list-group-item">
+                        {{ detalle.producto.nombre }} - {{ detalle.cantidad }} x ${{ detalle.producto.precio_venta }} = ${{ detalle.total_producto }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Totales</h4>
+            <p><strong>Total de Productos:</strong> {{ pedido.total_productos }}</p>
+            <p><strong>Subtotal:</strong> ${{ pedido.subtotal }}</p>
+            <p><strong>Total:</strong> ${{ pedido.subtotal }} (incluyendo impuestos si aplica)</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'pedidos:detalle_pedido' pedido.id %}" class="btn btn-primary">Ver Detalles del Pedido</a>
+        <a href="{% url 'inventario:productos' %}" class="btn btn-secondary">Seguir Comprando</a>
+    </div>
+</div>
+{% endblock %}

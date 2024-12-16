@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %} 
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Imagen del producto -->
+        <div class="col-md-6">
+            <div class="product-slider-single normal-slider">
+                <img src="{{ producto.imagen1.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                {% if producto.imagen2 %}
+                    <img src="{{ producto.imagen2.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                {% endif %}
+                {% if producto.imagen3 %}
+                    <img src="{{ producto.imagen3.url }}" alt="{{ producto.nombre }}" class="img-fluid">
+                {% endif %}
+            </div>
+            <div class="product-slider-single-nav normal-slider">
+                <div class="slider-nav-img">
+                    <img src="{{ producto.imagen1.url }}" alt="{{ producto.nombre }}" class="img-thumbnail">
+                </div>
+                {% if producto.imagen2 %}
+                <div class="slider-nav-img">
+                    <img src="{{ producto.imagen2.url }}" alt="{{ producto.nombre }}" class="img-thumbnail">
+                </div>
+                {% endif %}
+                {% if producto.imagen3 %}
+                <div class="slider-nav-img">
+                    <img src="{{ producto.imagen3.url }}" alt="{{ producto.nombre }}" class="img-thumbnail">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Información del producto -->
+        <div class="col-md-6">
+            <h1>{{ producto.nombre }}</h1>
+            <p><strong>Marca:</strong> {{ producto.marca }}</p>
+            <p><strong>Precio:</strong> ${{ producto.precio_venta|floatformat:2 }}</p>
+            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+            <p><strong>Categoría:</strong> <span class="badge bg-primary">{{ producto.categoria.nombre }}</span></p>
+            <p><strong>Stock disponible:</strong> {{ producto.stock }} unidades</p>
+
+            <!-- Formulario para añadir al carrito -->
+                <form method="POST" action="{% url 'carrito:agregar_al_carrito' producto.id %}">
+                    {% csrf_token %}
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" name="cantidad" id="cantidad" value="1" min="1" max="{{ producto.stock }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Agregar al carrito</button>
+                </form>
+        </div>
+    </div>
+    <div class="container-fluid py-5">
+        <!-- Marca -->
+        <div class="brand-slider">
+            <div class="brand-item">
+                <img src="{% static 'img/brand-1.png' %}" alt="Marca 1">
+            </div>
+            <div class="brand-item">
+                <img src="{% static 'img/brand-2.png' %}" alt="Marca 2">
+            </div>
+            <div class="brand-item">
+                <img src="{% static 'img/brand-3.png' %}" alt="Marca 3">
+            </div>
+            <div class="brand-item">
+                <img src="{% static 'img/brand-4.png' %}" alt="Marca 4">
+            </div>
+            <div class="brand-item">
+                <img src="{% static 'img/brand-5.png' %}" alt="Marca 5">
+            </div>
+            <div class="brand-item">
+                <img src="{% static 'img/brand-6.png' %}" alt="Marca 6">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Galería de imágenes -->
+    
+</div>
+{% endblock %}

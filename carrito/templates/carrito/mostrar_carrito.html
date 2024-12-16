@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Tu Carrito</h1>
+    {% if carrito.detallecarrito_set.all %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in carrito.detallecarrito_set.all %}
+            <tr>
+                <td>{{ detalle.producto.nombre }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>${{ detalle.total_producto }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2"><strong>Subtotal</strong></td>
+                <td><strong>${{ carrito.subtotal }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{% url 'carrito:proceder_a_pedido' %}" class="btn btn-success">Proceder al Pedido</a>
+    {% else %}
+    <p>Tu carrito está vacío.</p>
+    {% endif %}
+</div>
+{% endblock %}

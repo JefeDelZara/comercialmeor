@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>¿Reclamos, Consultas?</h1>
+
+<!-- Mostrar los mensajes de éxito o error -->
+{% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<form method="POST" action="{% url 'consultas:formulario' %}">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+        <label for="tipo_consulta" class="form-label">¿Qué deseas realizar?</label>
+        <select name="tipo_consulta" id="tipo_consulta" class="form-select" required>
+            <option value="Por favor selecciona uno" disabled selected>Por favor selecciona uno</option>
+            <option value="Consulta">Consulta</option>
+            <option value="Reclamo">Reclamo</option>
+            <option value="Felicitación">Felicitación</option>
+            <option value="Sugerencia">Sugerencia</option>
+            <option value="Quieres Comprar/Cotizar">Quieres Comprar/Cotizar</option>
+            <option value="Necesito asistencia web">Necesito asistencia web</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="rut_empresa" class="form-label">Rut Empresa *</label>
+        <input type="text" name="rut_empresa" id="rut_empresa" class="form-control" placeholder="Rut Empresa" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="nombre_apellido" class="form-label">Nombre y Apellido *</label>
+        <input type="text" name="nombre_apellido" id="nombre_apellido" class="form-control" placeholder="Nombre y Apellido" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">E-mail *</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono *</label>
+        <input type="tel" name="telefono" id="telefono" class="form-control" placeholder="Teléfono" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="mensaje" class="form-label">Mensaje *</label>
+        <textarea name="mensaje" id="mensaje" class="form-control" rows="5" placeholder="Escribe acá..." required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">Crear Nuevo Cliente</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ cliente_form.nombre.id_for_label }}">Nombre</label>
+                        {{ cliente_form.nombre }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ cliente_form.apellido.id_for_label }}">Apellido</label>
+                        {{ cliente_form.apellido }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ cliente_form.direccion.id_for_label }}">Dirección</label>
+                        {{ cliente_form.direccion }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ cliente_form.telefono.id_for_label }}">Teléfono</label>
+                        {{ cliente_form.telefono }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ cliente_form.email.id_for_label }}">Email</label>
+                        {{ cliente_form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ cliente_form.rut.id_for_label }}">RUT</label>
+                        {{ cliente_form.rut }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ cliente_form.observaciones.id_for_label }}">Observaciones</label>
+                        {{ cliente_form.observaciones }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Crear Cliente</button>
+                    <a href="{% url 'clientes:clientes_list' %}" class="btn btn-secondary ml-3">Volver</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

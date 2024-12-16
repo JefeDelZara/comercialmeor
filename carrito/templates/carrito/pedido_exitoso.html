@@ -1,0 +1,7 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <h1>¡Pedido Realizado Exitosamente!</h1>
+    <p>Tu pedido ha sido procesado correctamente.</p>
+    <a href="{% url 'carrito:ver_carrito' %}">Volver al carrito</a>
+{% endblock %}

@@ -1,0 +1,40 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Detalle del Pedido</h2>
+
+    <div class="card">
+        <div class="card-header">
+            <strong>Pedido #{{ pedido.id }}</strong>
+        </div>
+        <div class="card-body">
+            <p><strong>Fecha:</strong> {{ pedido.fecha_hora }}</p>
+            <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+            <p><strong>Total Productos:</strong> {{ pedido.total_productos }}</p>
+            <p><strong>Subtotal:</strong> ${{ pedido.subtotal }}</p>
+        </div>
+    </div>
+
+    <h4 class="mt-4">Productos</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in pedido.detallepedido_set.all %}
+            <tr>
+                <td>{{ detalle.producto.nombre }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>${{ detalle.producto.precio_venta }}</td>
+                <td>${{ detalle.total_producto }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Botón para descargar la factura -->
+    <a href="{% url 'facturas:generar_factura' pedido.id %}" class="btn btn-primary mt-4">Descargar Factura</a>
+</div>
