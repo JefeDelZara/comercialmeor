@@ -9,9 +9,11 @@ from django.conf import settings
 from django.contrib import messages
 from itertools import zip_longest
 
+
 from django.templatetags.static import static  # Importar static para usar en la vista
 
 def inicio(request):
+
     # Obtener los últimos tres pedidos, ordenados por fecha
     ultimos_pedidos = Pedido.objects.all().order_by('-fecha_hora')[:4]
     
@@ -54,6 +56,7 @@ def inicio(request):
         'ultimos_movimientos': ultimos_movimientos,
         'ultimo_producto': ultimo_producto,  # Pasar el último producto agregado
         'grupos_productos': grupos_productos,  # Pasar los grupos de productos
+        
     })
 
 

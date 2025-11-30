@@ -14,6 +14,9 @@ from pathlib import Path
 import os
 
 
+# Inicialización de Firebase
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,7 +33,7 @@ SECRET_KEY = 'django-insecure-w*y9szqs_9%%gm%n9c^ttk18la5+5l@f6)537l4_4bpr(uowoc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = []
 
 
 # Application definition
