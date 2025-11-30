@@ -10,7 +10,7 @@
                 <h3 class="mb-4">Pedido #{{ pedido.id }}</h3>
                 <p><strong>Fecha:</strong> {{ pedido.fecha_hora|date:"d M Y H:i" }}</p>
                 <p><strong>Usuario:</strong> {{ pedido.usuario.username }} ({{ pedido.usuario.email }})</p>
-                <p><strong>Teléfono:</strong> {{ pedido.usuario.cliente.telefono }}</p>
+        
 
                 <div class="mt-4">
                     <h5>Estado del Pedido:</h5>

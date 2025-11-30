@@ -573,10 +573,12 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    justify-content: center; /* Centra las imágenes y el contenido */
     height: 100%;
     max-height: 400px;
     overflow: hidden;
     background: #ffffff;
+    border-radius: 8px; /* Esquinas redondeadas para un look más limpio */
 }
 
 .category .category-item.ch-400 {
@@ -594,7 +596,8 @@ h2 {
 .category .category-item img {
     width: 100%; 
     height: 100%; 
-    object-fit: cover; 
+    object-fit: cover; /* Mantiene el aspecto de la imagen sin distorsionarla */
+    border-radius: 8px; /* Aplica bordes redondeados a las imágenes */
 }
 
 .category .category-name {
@@ -604,28 +607,32 @@ h2 {
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
+    justify-content: center; /* Centra el texto horizontalmente */
+    align-items: center; /* Centra el texto verticalmente */
     background: rgba(255, 111, 97, .7);
     transition: all 0.3s;
     opacity: 0;
+    border-radius: 8px; /* Bordes redondeados en la superposición */
 }
 
 .category .category-name:hover {
-    opacity: 1;     
+    opacity: 1;
 }
 
 .category .category-name p {
-    margin: 0 0 50px 0;
+    margin: 0;
     padding: 15px;
     width: 100%;
     text-align: center;
     color: #ffffff;
     font-size: 16px;
+    font-weight: bold; /* Resalta el texto */
     transition: all 0.3s;
 }
 
 .category .category-name:hover p {
-    margin: 0;       
+    margin: 0; 
+    font-size: 18px; /* Aumenta el tamaño del texto al hacer hover */
 }
 
 

@@ -26,8 +26,7 @@ def generar_factura(request, pedido_id):
     pdf.drawString(30, height - 100, f"Correo: {pedido.usuario.email}")
 
     # Verificar si el teléfono está disponible en el usuario, si no, poner "No disponible"
-    telefono = getattr(pedido.usuario, 'telefono', 'No disponible')
-    pdf.drawString(30, height - 120, f"Teléfono: {telefono}")
+
 
     # Detalles de los productos en el pedido
     y_position = height - 160

@@ -108,7 +108,8 @@
         </div>
     </div>
 </div>
-<!-- Category Start-->
+
+
 <div class="category py-5">
     <div class="container-fluid">
         <div class="section-header mb-4">
@@ -119,9 +120,9 @@
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <a href="{% url 'inventario:productos' %}?categoria={{ categoria.id }}" class="category-card">
                         {% if categoria.imagen %}
-                            <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}" class="img-fluid mb-3">
+                            <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}" class="img-fluid mb-3 category-image">
                         {% else %}
-                            <img src="{% static 'images/default-category.jpg' %}" alt="{{ categoria.nombre }}" class="img-fluid mb-3">
+                            <img src="{% static 'images/default-category.jpg' %}" alt="{{ categoria.nombre }}" class="img-fluid mb-3 category-image">
                         {% endif %}
                         <div class="category-name">{{ categoria.nombre }}</div>
                     </a>
@@ -130,7 +131,7 @@
         </div>
     </div>
 </div>
-<!-- Category End-->
+
 
 
 
@@ -188,7 +189,7 @@
                         <th>Fecha</th>
                         <th>Usuario</th>
                         <th>Correo</th>
-                        <th>Teléfono</th>
+                        
                         <th>Productos</th>
                         <th>Subtotal</th>
                         <th>Estado</th>
@@ -201,7 +202,7 @@
                             <td>{{ pedido.fecha_hora|date:"d M Y H:i" }}</td>
                             <td>{{ pedido.usuario.username }}</td>
                             <td>{{ pedido.usuario.email }}</td>
-                            <td>{{ pedido.usuario.telefono }}</td>
+                            
                             <td>{{ pedido.total_productos }}</td>
                             <td>${{ pedido.subtotal|floatformat:0 }}</td>
                             <td>
@@ -230,7 +231,7 @@
 {% if user.is_authenticated and user.is_superuser %}
 <!-- Productos Disponibles Start-->
 <div class="container mt-4">
-    <h2>Últimos Productos Agregados</h2>
+    <h2>Resumen de Productos</h2>
     <div class="row">
         {% if ultimos_movimientos %}
             {% for producto in ultimos_movimientos %}
@@ -263,7 +264,7 @@
             {% endfor %}
         {% else %}
             <div class="col-12 text-center">
-                <p class="text-muted">No se han encontrado productos.</p>
+                <p class="text-muted">No se han encontrado movimientos de productos.</p>
             </div>
         {% endif %}
     </div>
