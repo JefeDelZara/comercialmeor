@@ -17,8 +17,9 @@ class RegistroForm(forms.ModelForm):
         label="Confirmar contraseña"
     )
 
+    # Eliminamos la opción ADMIN por seguridad
     tipo_usuario = forms.ChoiceField(
-        choices=[('CLIENTE', 'Cliente'), ('ADMIN', 'Administrador')],
+        choices=[('CLIENTE', 'Cliente')],
         label="Tipo de usuario",
         widget=forms.Select(attrs={
             'placeholder': 'Tipo de usuario'
@@ -55,8 +56,12 @@ class RegistroForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+
+        # Encriptar contraseña
         user.set_password(self.cleaned_data['password1'])
-        user.tipo_usuario = self.cleaned_data['tipo_usuario']
+
+        # Forzar que SIEMPRE sea cliente (seguridad extra)
+        user.tipo_usuario = 'CLIENTE'
 
         if commit:
             user.save()
