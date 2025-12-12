@@ -1,29 +1,68 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>¿Reclamos, Consultas? Envianos un Mensaje</h1>
-
-<!-- Mostrar los mensajes de éxito o error -->
 {% if messages %}
     {% for message in messages %}
-        {% if 'consultas' in message.tags %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
+        {% if "consultas" in message.tags %}
+            {% if "success" in message.tags %}
+                <div class="alert alert-success shadow-sm p-3 rounded-3 mt-3">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-danger shadow-sm p-3 rounded-3 mt-3">
+                    {{ message }}
+                </div>
+            {% endif %}
         {% endif %}
     {% endfor %}
 {% endif %}
 
 
 
+<h1>¿Reclamos?, ¿Consultas? Envíanos un Mensaje</h1>
 
-<form method="POST" action="{% url 'consultas:formulario' %}">
+<style>
+    .is-invalid {
+        border-color: #dc3545 !important;
+        background-color: #ffe6e6 !important;
+    }
+
+    /* Tooltip profesional */
+    .error-tooltip {
+        display: none;
+        background: #dc3545;
+        color: white;
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        position: relative;
+        width: fit-content;
+    }
+
+    .error-tooltip::after {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 10px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: transparent transparent #dc3545 transparent;
+    }
+
+    .show-tooltip {
+        display: block;
+    }
+</style>
+
+<form method="POST" action="{% url 'consultas:formulario' %}" id="consultaForm">
     {% csrf_token %}
-    
+
+    <!-- Tipo de consulta -->
     <div class="mb-3">
         <label for="tipo_consulta" class="form-label">¿Qué deseas realizar?</label>
         <select name="tipo_consulta" id="tipo_consulta" class="form-select" required>
-            <option value="Por favor selecciona uno" disabled selected>Por favor selecciona uno</option>
+            <option value="" disabled selected>Por favor selecciona uno</option>
             <option value="Consulta">Consulta</option>
             <option value="Reclamo">Reclamo</option>
             <option value="Felicitación">Felicitación</option>
@@ -31,33 +70,101 @@
             <option value="Quieres Comprar/Cotizar">Quieres Comprar/Cotizar</option>
             <option value="Necesito asistencia web">Necesito asistencia web</option>
         </select>
+        <div class="error-tooltip">Debes seleccionar una opción.</div>
     </div>
 
+    <!-- RUT -->
     <div class="mb-3">
-        <label for="rut_empresa" class="form-label">Rut Empresa *</label>
-        <input type="text" name="rut_empresa" id="rut_empresa" class="form-control" placeholder="Rut Empresa" required>
+        <label for="rut_empresa" class="form-label">RUN / RUT Empresa *</label>
+        <input type="text" name="rut_empresa" id="rut_empresa" class="form-control"
+               pattern="^[0-9]{7,8}-[0-9Kk]$"
+               placeholder="Ej: 12345678-9"
+               required>
+        <div class="error-tooltip">Debe ser un RUT válido y con guión.</div>
     </div>
 
+    <!-- Nombre -->
     <div class="mb-3">
-        <label for="nombre_apellido" class="form-label">Nombre y Apellido *</label>
-        <input type="text" name="nombre_apellido" id="nombre_apellido" class="form-control" placeholder="Nombre y Apellido" required>
+        <label for="nombre" class="form-label">Nombre *</label>
+        <input type="text" name="nombre" id="nombre" class="form-control"
+               pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}$"
+               required>
+        <div class="error-tooltip">Debe contener solo letras, mínimo 2.</div>
     </div>
 
+    <!-- Apellido -->
+    <div class="mb-3">
+        <label for="apellido" class="form-label">Apellido *</label>
+        <input type="text" name="apellido" id="apellido" class="form-control"
+               pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}$"
+               required>
+        <div class="error-tooltip">Debe contener solo letras, mínimo 2.</div>
+    </div>
+
+    <!-- Email -->
     <div class="mb-3">
         <label for="email" class="form-label">E-mail *</label>
-        <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
+        <input type="email" name="email" id="email" class="form-control"
+               placeholder="correo@ejemplo.cl"
+               pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(cl|com|net|org|edu|gov|info|biz|io|co)$"
+               required>
+        <div class="error-tooltip">Debe ser un correo válido como nombre@dominio.cl</div>
     </div>
 
+    <!-- Teléfono -->
     <div class="mb-3">
         <label for="telefono" class="form-label">Teléfono *</label>
-        <input type="tel" name="telefono" id="telefono" class="form-control" placeholder="Teléfono" required>
+        <input type="tel" name="telefono" id="telefono" class="form-control"
+               pattern="^[0-9]{9}$"
+               required>
+        <div class="error-tooltip">Debe tener exactamente 9 números.</div>
     </div>
 
+    <!-- Mensaje -->
     <div class="mb-3">
         <label for="mensaje" class="form-label">Mensaje *</label>
-        <textarea name="mensaje" id="mensaje" class="form-control" rows="5" placeholder="Escribe acá..." required></textarea>
+        <textarea name="mensaje" id="mensaje" class="form-control" rows="5"
+                  minlength="5"
+                  required></textarea>
+        <div class="error-tooltip">El mensaje debe tener al menos 5 caracteres.</div>
     </div>
 
     <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("consultaForm");
+
+    form.querySelectorAll("input, select, textarea").forEach(field => {
+
+        // VALIDACIÓN EN TIEMPO REAL
+        field.addEventListener("input", () => validateField(field));
+        field.addEventListener("change", () => validateField(field));
+
+        // QUITAR ESPACIOS
+        field.addEventListener("blur", () => {
+            field.value = field.value.trim();
+            validateField(field);
+        });
+    });
+
+    // FUNCIÓN DE VALIDACIÓN
+    function validateField(field) {
+        const tooltip = field.parentElement.querySelector(".error-tooltip");
+
+        if (!field.checkValidity()) {
+            field.classList.add("is-invalid");
+            tooltip.classList.add("show-tooltip");
+        } else {
+            field.classList.remove("is-invalid");
+            tooltip.classList.remove("show-tooltip");
+        }
+    }
+
+});
+</script>
+
 {% endblock %}
