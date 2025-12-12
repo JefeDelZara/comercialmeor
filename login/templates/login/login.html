@@ -1,104 +1,153 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h2 class="text-center" style="color: white;">Iniciar sesión</h2>
 
+<div class="login-wrapper">
 
-<style>
-    /* Estilo para la página con fondo negro y texto blanco */
-    body {
-        background-color: #000; /* Fondo negro para toda la página */
-        color: #000000; /* Color blanco para el texto en toda la página */
-    }
+    <div class="login-card">
 
-    /* Estilo para centrar todo el formulario */
-    .login {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* Asegura que el formulario se centre verticalmente */
-    }
+        <h2 class="titulo-login">Iniciar sesión</h2>
 
-    .login-form {
-        background: #fff;
-        padding: 20px;  /* Reducción del padding */
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .login h2 {
-        font-size: 28px;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #000;  /* Color del texto del título en negro */
-    }
-
-    .form-group {
-        margin-bottom: 10px;
-    }
-
-    label {
-        font-weight: 600;
-        margin-bottom: 5px;
-        display: block;
-        color: #000;  /* Color negro para las etiquetas */
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 8px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-    }
-
-    .btn-block {
-        width: 100%;
-        padding: 10px;
-        background-color: #FF6F61;  /* Color de fondo del botón */
-        color: white;  /* Texto del botón en blanco */
-    }
-
-    .custom-control-label {
-        font-size: 14px;
-        color: #000;  /* Color negro para el texto del checkbox */
-    }
-
-    .text-center {
-        text-align: center;
-    }
-
-    .mt-3 {
-        margin-top: 1rem;
-    }
-
-    .mb-3 {
-        margin-bottom: 1rem;
-    }
-</style>
-
-<div class="login">
-    <div class="login-form">
-        <form method="POST">
+        <form method="POST" class="form">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="username">E-mail / Usuario</label>
-                {{ form.username }}
+
+            <div class="form__field">
+                <input type="text" name="username" placeholder="Ingrese nombre de usuario" required>
             </div>
 
-            <div class="form-group">
-                <label for="password">Contraseña</label>
-                {{ form.password }}
+            <div class="form__field">
+                <input type="password" name="password" placeholder="Ingrese contraseña" required>
             </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+
+            <div class="form__field">
+                <input type="submit" value="Entrar" class="btn-login">
             </div>
         </form>
 
-        <p class="text-center mt-3">¿No tienes una cuenta? <a href="{% url 'login:registro' %}">Regístrate aquí</a></p>
+        <p class="texto-alt">
+            ¿No tienes una cuenta?
+            <a href="{% url 'login:registro' %}">Registrarse aquí</a>
+        </p>
+
     </div>
 </div>
+
+<style>
+
+    /* -- BASE COLORS -- */
+    :root {
+        --azul-meor: #00adce;
+        --negro: #000;
+        --gris-oscuro: #0d0d0d;
+        --gris-medio: #1a1a1a;
+        --texto-claro: #e6e6e6;
+        --placeholder: #8c8c8c;
+    }
+
+    body {
+        background: var(--negro);
+    }
+
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 380px;
+        background: var(--gris-medio);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+        padding: 3rem 2rem;
+        border-radius: 14px;
+        text-align: center;
+        animation: fadeIn .5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TITULO */
+    .titulo-login {
+        color: var(--texto-claro);
+        font-size: 2.3rem;
+        font-weight: 300;
+        margin-bottom: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* CAMPOS */
+    .form__field {
+        margin-bottom: 1.2rem;
+    }
+
+    .form__field input {
+        width: 100%;
+        padding: 12px 18px;
+        background: var(--gris-oscuro);
+        border: 1px solid #1e1e1e;
+        border-radius: 30px;
+        font-size: 1rem;
+        color: var(--texto-claro);
+        outline: none;
+        text-align: left;
+        transition: .2s;
+    }
+
+    .form__field input::placeholder {
+        color: var(--placeholder);
+    }
+
+    .form__field input:focus {
+        border-color: var(--azul-meor);
+        box-shadow: 0 0 8px rgba(0,173,206,0.5);
+        background: #111;
+    }
+
+    /* BOTÓN */
+    .btn-login {
+        background: var;
+        border: none;
+        cursor: pointer;
+        padding: 14px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #fff;
+        width: 100%;
+        transition: .2s;
+        letter-spacing: .5px;
+        text-align: center;
+    }
+
+    .btn-login:hover {
+        background: #0093ad;
+        box-shadow: 0 0 12px rgba(0,173,206,0.6);
+    }
+
+    /* TEXTO BAJO */
+    .texto-alt {
+        margin-top: 2rem;
+        color: var(--placeholder);
+        font-size: 0.95rem;
+    }
+
+    .texto-alt a {
+        color: var(--azul-meor);
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .texto-alt a:hover {
+        text-decoration: underline;
+    }
+
+</style>
 
 {% endblock %}

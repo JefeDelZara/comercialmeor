@@ -1,137 +1,248 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
+
+<!-- MENSAJES DEL FORMULARIO -->
 {% if messages %}
     {% for message in messages %}
         {% if "consultas" in message.tags %}
-            {% if "success" in message.tags %}
-                <div class="alert alert-success shadow-sm p-3 rounded-3 mt-3">
-                    {{ message }}
-                </div>
-            {% else %}
-                <div class="alert alert-danger shadow-sm p-3 rounded-3 mt-3">
-                    {{ message }}
-                </div>
-            {% endif %}
+            <div class="alert 
+                {% if 'success' in message.tags %}
+                    alert-success
+                {% else %}
+                    alert-danger
+                {% endif %}
+                shadow p-3 rounded-3 mt-3">
+                {{ message }}
+            </div>
         {% endif %}
     {% endfor %}
 {% endif %}
 
 
+<!-- ENCABEZADO PROFESIONAL -->
+<div class="consulta-header text-center mb-4 p-4 shadow-sm rounded-4">
 
-<h1>¿Reclamos?, ¿Consultas? Envíanos un Mensaje</h1>
+    <h2 class="titulo-consulta text-primary fw-bold mb-2">
+        ¿Consultas?¿Reclamos? Envianos un mensaje
+    </h2>
+
+    <p class="subtitulo-consulta text-secondary">
+        Envianos un mensaje y nos pondremos en contacto contigo lo más rapidamente posible
+    </p>
+
+</div>
+
 
 <style>
+
+    /* Estilo general */
+    .card {
+        background: #ffffff;
+    }
+
+    label {
+        font-weight: 600;
+        color: #000000;
+    }
+
+    input.form-control, select.form-select, textarea.form-control {
+        border-radius: 10px;
+        padding: 10px 14px;
+        border: 1.4px solid #ced4da;
+    }
+
+    input.form-control:focus, select.form-select:focus, textarea.form-control:focus {
+        border-color: #203047;
+        box-shadow: 0 0 0 0.15rem rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: #00adce;
+        border: none;
+        padding: 12px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        transition: 0.2s;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background: #000000;
+    }
+
+    /* Error */
     .is-invalid {
-        border-color: #dc3545 !important;
+        border-color: #e63946 !important;
         background-color: #ffe6e6 !important;
     }
 
     /* Tooltip profesional */
     .error-tooltip {
         display: none;
-        background: #dc3545;
+        background: #e63946;
         color: white;
         font-size: 0.85rem;
-        padding: 6px 10px;
-        margin-top: 5px;
+        padding: 8px 12px;
+        margin-top: 6px;
         border-radius: 6px;
         position: relative;
         width: fit-content;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
     }
 
     .error-tooltip::after {
         content: "";
         position: absolute;
         top: -6px;
-        left: 10px;
+        left: 15px;
         border-width: 6px;
         border-style: solid;
-        border-color: transparent transparent #dc3545 transparent;
+        border-color: transparent transparent #e63946 transparent;
     }
 
     .show-tooltip {
         display: block;
     }
+    <style>
+
+ /* Encabezado del formulario */
+    .consulta-header {
+        background: linear-gradient(135deg, #ffffff 0%, #f6f6f6 100%);
+        border: 2px solid #00000022;
+        border-left: 6px solid #00adce; 
+        border-radius: 14px;
+        padding: 35px 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        position: relative;
+    }
+
+    /* Decoración con sombra suave interna */
+    .consulta-header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #00adce10, #00000005);
+        pointer-events: none;
+    }
+
+    /* Título */
+    .titulo-consulta {
+        font-size: 2.1rem;
+        letter-spacing: -0.5px;
+        font-weight: 800;
+        color: #000000;
+        text-transform: uppercase;
+    }
+
+    /* Subtítulo */
+    .subtitulo-consulta {
+        font-size: 1.1rem;
+        max-width: 700px;
+        margin: 0 auto;
+        color: #333333;
+        line-height: 1.5;
+    }
+
+    /* Línea decorativa inferior */
+    .consulta-header::after {
+        content: "";
+        display: block;
+        width: 90px;
+        height: 4px;
+        background: #00adce;
+        border-radius: 10px;
+        margin: 22px auto 0;
+    }
+
+    
+
 </style>
+
 
 <form method="POST" action="{% url 'consultas:formulario' %}" id="consultaForm">
     {% csrf_token %}
 
     <!-- Tipo de consulta -->
     <div class="mb-3">
-        <label for="tipo_consulta" class="form-label">¿Qué deseas realizar?</label>
+        <label>¿Qué deseas realizar?</label>
         <select name="tipo_consulta" id="tipo_consulta" class="form-select" required>
-            <option value="" disabled selected>Por favor selecciona uno</option>
+            <option value="" disabled selected>Selecciona una opción</option>
             <option value="Consulta">Consulta</option>
             <option value="Reclamo">Reclamo</option>
             <option value="Felicitación">Felicitación</option>
             <option value="Sugerencia">Sugerencia</option>
-            <option value="Quieres Comprar/Cotizar">Quieres Comprar/Cotizar</option>
-            <option value="Necesito asistencia web">Necesito asistencia web</option>
+            <option value="Quieres Comprar/Cotizar">Comprar / Cotizar</option>
+            <option value="Necesito asistencia web">Asistencia Web</option>
         </select>
         <div class="error-tooltip">Debes seleccionar una opción.</div>
     </div>
 
     <!-- RUT -->
     <div class="mb-3">
-        <label for="rut_empresa" class="form-label">RUN / RUT Empresa *</label>
+        <label>RUN / RUT Empresa *</label>
         <input type="text" name="rut_empresa" id="rut_empresa" class="form-control"
                pattern="^[0-9]{7,8}-[0-9Kk]$"
                placeholder="Ej: 12345678-9"
                required>
-        <div class="error-tooltip">Debe ser un RUT válido y con guión.</div>
+        <div class="error-tooltip">Debe ser un RUT válido con guion.</div>
     </div>
 
     <!-- Nombre -->
     <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre *</label>
+        <label>Nombre *</label>
         <input type="text" name="nombre" id="nombre" class="form-control"
                pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}$"
+               placeholder="Ej: Juan"
                required>
         <div class="error-tooltip">Debe contener solo letras, mínimo 2.</div>
     </div>
 
     <!-- Apellido -->
     <div class="mb-3">
-        <label for="apellido" class="form-label">Apellido *</label>
+        <label>Apellido *</label>
         <input type="text" name="apellido" id="apellido" class="form-control"
                pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ]{2,}$"
+               placeholder="Ej: Tapia"
                required>
         <div class="error-tooltip">Debe contener solo letras, mínimo 2.</div>
     </div>
 
     <!-- Email -->
     <div class="mb-3">
-        <label for="email" class="form-label">E-mail *</label>
+        <label>E-mail *</label>
         <input type="email" name="email" id="email" class="form-control"
                placeholder="correo@ejemplo.cl"
                pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(cl|com|net|org|edu|gov|info|biz|io|co)$"
                required>
-        <div class="error-tooltip">Debe ser un correo válido como nombre@dominio.cl</div>
+        <div class="error-tooltip">Ingresa un correo válido.</div>
     </div>
 
     <!-- Teléfono -->
     <div class="mb-3">
-        <label for="telefono" class="form-label">Teléfono *</label>
+        <label>Teléfono *</label>
         <input type="tel" name="telefono" id="telefono" class="form-control"
                pattern="^[0-9]{9}$"
+               placeholder="Ej: 987654321"
                required>
-        <div class="error-tooltip">Debe tener exactamente 9 números.</div>
+        <div class="error-tooltip">Debe tener 9 números.</div>
     </div>
 
     <!-- Mensaje -->
     <div class="mb-3">
-        <label for="mensaje" class="form-label">Mensaje *</label>
-        <textarea name="mensaje" id="mensaje" class="form-control" rows="5"
-                  minlength="5"
-                  required></textarea>
-        <div class="error-tooltip">El mensaje debe tener al menos 5 caracteres.</div>
+        <label>Mensaje *</label>
+        <textarea name="mensaje" id="mensaje" class="form-control"
+                placeholder="Escriba su mensaje aquí"
+                rows="5" minlength="10" required></textarea>
+                  
+        <div class="error-tooltip">El mensaje debe tener mínimo 10 caracteres.</div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
 </form>
-
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -140,18 +251,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.querySelectorAll("input, select, textarea").forEach(field => {
 
-        // VALIDACIÓN EN TIEMPO REAL
         field.addEventListener("input", () => validateField(field));
         field.addEventListener("change", () => validateField(field));
 
-        // QUITAR ESPACIOS
         field.addEventListener("blur", () => {
             field.value = field.value.trim();
             validateField(field);
         });
     });
 
-    // FUNCIÓN DE VALIDACIÓN
     function validateField(field) {
         const tooltip = field.parentElement.querySelector(".error-tooltip");
 
@@ -166,5 +274,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
+
+    </div>
+</div>
 
 {% endblock %}

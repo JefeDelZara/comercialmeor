@@ -1,13 +1,181 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h2>Crear cuenta</h2>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Registrar</button>
-</form>
+<div class="login-wrapper">
 
-<p>¿Ya tienes cuenta? <a href="{% url 'login:login' %}">Inicia sesión aquí</a></p>
+    <div class="login-card">
+
+        <h2 class="titulo-login">Crear cuenta</h2>
+
+        <form method="POST" class="form">
+            {% csrf_token %}
+
+            <div class="form__field">
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form__field">
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form__field">
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <div class="text-danger small mt-1">{{ form.password1.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form__field">
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            {# si tu form tiene tipo_usuario #}
+            {% if form.tipo_usuario %}
+            <div class="form__field">
+                {{ form.tipo_usuario }}
+                {% if form.tipo_usuario.errors %}
+                    <div class="text-danger small mt-1">{{ form.tipo_usuario.errors.0 }}</div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="form__field">
+                <input type="submit" value="Registrarse" class="btn-login">
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
+            {% endif %}
+        </form>
+
+
+        <p class="texto-alt">
+            ¿Ya tienes cuenta?
+            <a href="{% url 'login:login' %}">Inicia sesión aquí</a>
+        </p>
+
+    </div>
+</div>
+
+<style>
+
+    :root {
+        --azul-meor: #00adce;
+        --negro: #000;
+        --gris-oscuro: #0d0d0d;
+        --gris-medio: #1a1a1a;
+        --texto-claro: #e6e6e6;
+        --placeholder: #8c8c8c;
+    }
+
+    body {
+        background: var(--negro);
+    }
+
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 60px 20px;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 380px;
+        background: var(--gris-medio);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+        padding: 3rem 2rem;
+        border-radius: 14px;
+        text-align: center;
+        animation: fadeIn .5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .titulo-login {
+        color: var(--texto-claro);
+        font-size: 2.3rem;
+        font-weight: 300;
+        margin-bottom: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form__field {
+        margin-bottom: 1.2rem;
+    }
+
+    /* Aplica tu estilo a los inputs generados por Django */
+    input, select {
+        width: 100%;
+        padding: 12px 18px;
+        background: var(--gris-oscuro) !important;
+        border: 1px solid #1e1e1e;
+        border-radius: 30px;
+        font-size: 1rem;
+        color: var(--texto-claro);
+        outline: none;
+        transition: .2s;
+    }
+
+    input::placeholder {
+        color: var(--placeholder);
+    }
+
+    input:focus {
+        border-color: var(--azul-meor);
+        box-shadow: 0 0 8px rgba(0,173,206,0.5);
+        background: #111 !important;
+    }
+
+    .btn-login {
+        background: var(--azul-meor);
+        border: none;
+        cursor: pointer;
+        padding: 14px;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #fff;
+        width: 100%;
+        transition: .2s;
+        letter-spacing: .5px;
+    }
+
+    .btn-login:hover {
+        background: #0093ad;
+        box-shadow: 0 0 12px rgba(0,173,206,0.6);
+    }
+
+    .texto-alt {
+        margin-top: 2rem;
+        color: var(--placeholder);
+        font-size: 0.95rem;
+    }
+
+    .texto-alt a {
+        color: var(--azul-meor);
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .texto-alt a:hover {
+        text-decoration: underline;
+    }
+
+</style>
+
 {% endblock %}

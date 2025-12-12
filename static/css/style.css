@@ -103,16 +103,16 @@ h2 {
 }
 
 .btn {
-    color: #FF6F61;
-    background: #ffffff;
-    border: 1px solid #FF6F61;
+    color: #e7e7e7;
+    background: #00adce;
+    border: 1px solid #00adce;
 }
 
 .btn:hover,
 .btn:active,
 .btn:focus {
     color: #ffffff;
-    background: #FF6F61;
+    background: #000000;
     box-shadow: none;
 }
 
