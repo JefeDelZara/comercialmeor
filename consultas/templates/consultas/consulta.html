@@ -1,16 +1,21 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h1>¿Reclamos, Consultas?</h1>
+<h1>¿Reclamos, Consultas? Envianos un Mensaje</h1>
 
 <!-- Mostrar los mensajes de éxito o error -->
 {% if messages %}
-    <div class="alert alert-info">
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    </div>
+    {% for message in messages %}
+        {% if 'consultas' in message.tags %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
 {% endif %}
+
+
+
 
 <form method="POST" action="{% url 'consultas:formulario' %}">
     {% csrf_token %}

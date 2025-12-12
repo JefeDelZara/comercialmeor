@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.mail import send_mail
 
-
-
 def formulario_consulta(request):
     if request.method == 'POST':
         tipo_consulta = request.POST.get('tipo_consulta')
@@ -12,26 +10,29 @@ def formulario_consulta(request):
         email = request.POST.get('email')
         telefono = request.POST.get('telefono')
         mensaje = request.POST.get('mensaje')
-        
-        # Enviar correo con los datos ingresados
+
         subject = f"Consulta de {nombre_apellido} - {tipo_consulta}"
-        message = f"Tipo de consulta: {tipo_consulta}\n\nRut Empresa: {rut_empresa}\nNombre: {nombre_apellido}\nE-mail: {email}\nTeléfono: {telefono}\nMensaje:\n{mensaje}"
-        recipient_email = 'matiasaedo12343@gmail.com'
-        
+        message = (
+            f"Tipo de consulta: {tipo_consulta}\n\n"
+            f"Rut Empresa: {rut_empresa}\n"
+            f"Nombre: {nombre_apellido}\n"
+            f"E-mail: {email}\n"
+            f"Teléfono: {telefono}\n"
+            f"Mensaje:\n{mensaje}"
+        )
+
         try:
             send_mail(
                 subject,
                 message,
-                'from@example.com',  # Cambia con tu correo
-                [recipient_email],
+                'from@example.com',
+                ['matiasaedo12343@gmail.com'],
                 fail_silently=False,
             )
-            # Si el correo se envía con éxito, muestra un mensaje de éxito
-            messages.success(request, "Tu consulta ha sido enviada con éxito.")
-        except Exception as e:
-            # Si ocurre un error, muestra un mensaje de error
-            messages.error(request, "Hubo un problema, intenta de nuevo.")
-        
-        return redirect('consultas:formulario')  # Redirige al formulario o a una página de confirmación
-    
+            messages.success(request, "Tu consulta ha sido enviada con éxito.", extra_tags='consultas')
+        except:
+            messages.error(request, "Hubo un problema, intenta de nuevo.", extra_tags='consultas')
+
+        return redirect(request.path)  # ← MÁS SIMPLE
+
     return render(request, 'consultas/consulta.html')

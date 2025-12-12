@@ -6,6 +6,7 @@ from pedidos.models import Pedido, DetallePedido
 from django.contrib import messages
 from django.core.mail import send_mail
 
+
 # Vista para mostrar el carrito
 @login_required
 def mostrar_carrito(request):
@@ -46,27 +47,26 @@ def ver_carrito(request):
 
 
 # Vista para agregar productos al carrito
-@login_required
 def agregar_al_carrito(request, producto_id):
-    # Obtener el producto según el id proporcionado
-    producto = get_object_or_404(Producto, pk=producto_id)
 
-    # Verificar si el carrito ya existe para el usuario
+    # Si el usuario NO está autenticado → mensaje + redirección correcta
+    if not request.user.is_authenticated:
+        messages.warning(request, "Debes iniciar sesión para agregar productos al carrito.")
+        return redirect(f"/login/?next=/carrito/agregar_al_carrito/{producto_id}/")
+
+    # --- Lógica normal ---
+    producto = get_object_or_404(Producto, pk=producto_id)
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
 
-    # Obtiene la cantidad a agregar (por defecto es 1)
     cantidad_a_agregar = int(request.POST.get('cantidad', 1))
 
-    # Verificar que la cantidad no sobrepase el stock
     if cantidad_a_agregar > producto.stock:
         messages.error(request, "No hay suficiente stock para este producto.")
-        return redirect('inventario:producto_detalle', id=producto.id)
+        return redirect('inventario:detalle_producto', id=producto.id)
 
-    # Si el producto ya está en el carrito, aumentamos la cantidad
     carrito_item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto=producto)
 
     if not created:
-        # Si ya existe, se actualiza la cantidad
         nueva_cantidad = carrito_item.cantidad + cantidad_a_agregar
         if nueva_cantidad > producto.stock:
             messages.error(request, "La cantidad solicitada supera el stock disponible.")
@@ -75,12 +75,10 @@ def agregar_al_carrito(request, producto_id):
             carrito_item.save()
             messages.success(request, "Producto actualizado en el carrito.")
     else:
-        # Si es un nuevo item, se agrega la cantidad
         carrito_item.cantidad = cantidad_a_agregar
         carrito_item.save()
         messages.success(request, "Producto agregado al carrito.")
 
-    # Redirige al detalle del producto con un mensaje
     return redirect('inventario:detalle_producto', id=producto.id)
 
 
