@@ -1,42 +1,201 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-    <div class="container mt-4">
-        <h2>Reporte de Pedidos</h2>
-        
-        <form method="get" action="{% url 'reportes:reporte_pedidos' %}">
+
+<div class="report-container">
+
+    <div class="report-card">
+
+        <h2 class="report-title">📊 Reporte de Pedidos</h2>
+
+        <form method="get" action="{% url 'reportes:reporte_pedidos' %}" class="report-form">
             <div class="form-group">
                 <label for="fecha_inicio">Fecha de Inicio</label>
                 <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control">
             </div>
+
             <div class="form-group">
                 <label for="fecha_fin">Fecha de Fin</label>
                 <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
             </div>
-            <button type="submit" class="btn btn-primary">Generar Reporte</button>
+
+            <button type="submit" class="btn-filtrar">Generar Reporte</button>
         </form>
 
-        <table class="table mt-4">
-            <thead>
-                <tr>
-                    <th>Pedido ID</th>
-                    <th>Usuario</th>
-                    <th>Fecha</th>
-                    <th>Total</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pedido in pedidos %}
+        <div class="table-responsive">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for pedido in pedidos %}
                     <tr>
                         <td>{{ pedido.id }}</td>
-                        <td>{{ pedido.usuario.username }}</td>
+                        <td class="text-ellipsis">{{ pedido.usuario.username }}</td>
                         <td>{{ pedido.fecha_pedido }}</td>
-                        <td>{{ pedido.total }}</td>
+                        <td>${{ pedido.total }}</td>
                         <td>{{ pedido.estado }}</td>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="no-data">No hay pedidos en este rango de fechas</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
+</div>
+
+<style>
+
+    /* 🎨 Colores globales */
+    :root {
+        --azul-meor: #00adce;
+        --gris-oscuro: #0d0d0d;
+        --gris-medio: #1a1a1a;
+        --gris-claro: #e6e6e6;
+    }
+
+    body {
+        background: var(--gris-oscuro);
+    }
+
+    /* 🧾 CONTENEDOR GENERAL */
+    .report-container {
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .report-card {
+        width: 100%;
+        max-width: 1000px;
+        background: var(--gris-medio);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        animation: fadeIn .5s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TÍTULO */
+    .report-title {
+        color: var(--gris-claro);
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    /* FORMULARIO DE FILTRO */
+    .report-form {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    label {
+        color: var(--gris-claro);
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        background: #111;
+        border: 1px solid #333;
+        color: var(--gris-claro);
+    }
+
+    .btn-filtrar {
+        width: 100%;
+        background: var(--azul-meor);
+        border: none;
+        padding: 12px;
+        color: white;
+        font-weight: bold;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: .2s;
+        letter-spacing: .5px;
+    }
+
+    .btn-filtrar:hover {
+        background: #0093ad;
+        box-shadow: 0 0 10px rgba(0,173,206,0.5);
+    }
+
+    /* TABLA PROFESIONAL */
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: 10px;
+    }
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #111;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .report-table thead {
+        background: #0f99b4;
+        color: #fff;
+    }
+
+    .report-table th, 
+    .report-table td {
+        padding: 14px 12px;
+        white-space: nowrap;
+    }
+
+    .report-table tbody tr {
+        border-bottom: 1px solid #222;
+        color: var(--gris-claro);
+    }
+
+    .report-table tbody tr:hover {
+        background: #1f1f1f;
+    }
+
+    /* TEXTOS LARGOS QUE NO ROMPAN DISEÑO */
+    .text-ellipsis {
+        max-width: 200px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* MENSAJE SIN DATOS */
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        font-size: 1rem;
+        color: #aaa;
+    }
+
+</style>
+
 {% endblock %}

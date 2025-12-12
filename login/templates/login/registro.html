@@ -8,56 +8,67 @@
 
         <h2 class="titulo-login">Crear cuenta</h2>
 
+        <!-- MENSAJES -->
+        {% if messages %}
+            <div class="mensaje-wrapper">
+                {% for message in messages %}
+                    <div class="mensaje {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- FIN MENSAJES -->
+
         <form method="POST" class="form">
             {% csrf_token %}
 
             <div class="form__field">
                 {{ form.username }}
                 {% if form.username.errors %}
-                    <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                    <div class="mensaje error">{{ form.username.errors.0 }}</div>
                 {% endif %}
             </div>
 
             <div class="form__field">
                 {{ form.email }}
                 {% if form.email.errors %}
-                    <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                    <div class="mensaje error">{{ form.email.errors.0 }}</div>
                 {% endif %}
             </div>
 
             <div class="form__field">
                 {{ form.password1 }}
                 {% if form.password1.errors %}
-                    <div class="text-danger small mt-1">{{ form.password1.errors.0 }}</div>
+                    <div class="mensaje error">{{ form.password1.errors.0 }}</div>
                 {% endif %}
             </div>
 
             <div class="form__field">
                 {{ form.password2 }}
                 {% if form.password2.errors %}
-                    <div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>
+                    <div class="mensaje error">{{ form.password2.errors.0 }}</div>
                 {% endif %}
             </div>
 
-            {# si tu form tiene tipo_usuario #}
             {% if form.tipo_usuario %}
             <div class="form__field">
                 {{ form.tipo_usuario }}
                 {% if form.tipo_usuario.errors %}
-                    <div class="text-danger small mt-1">{{ form.tipo_usuario.errors.0 }}</div>
+                    <div class="mensaje error">{{ form.tipo_usuario.errors.0 }}</div>
                 {% endif %}
             </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="mensaje error">{{ form.non_field_errors }}</div>
             {% endif %}
 
             <div class="form__field">
                 <input type="submit" value="Registrarse" class="btn-login">
             </div>
 
-            {% if form.non_field_errors %}
-                <div class="text-danger mt-2">{{ form.non_field_errors }}</div>
-            {% endif %}
         </form>
-
 
         <p class="texto-alt">
             ¿Ya tienes cuenta?
@@ -118,7 +129,7 @@
         margin-bottom: 1.2rem;
     }
 
-    /* Aplica tu estilo a los inputs generados por Django */
+    /* Inputs */
     input, select {
         width: 100%;
         padding: 12px 18px;
@@ -174,6 +185,32 @@
 
     .texto-alt a:hover {
         text-decoration: underline;
+    }
+
+    /* MENSAJES */
+    .mensaje-wrapper {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .mensaje {
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        animation: fadeIn .4s ease-in-out;
+        margin-bottom: 10px;
+    }
+
+    .mensaje.error {
+        background: rgba(255, 60, 60, 0.15);
+        border-left: 4px solid #ff3c3c;
+        color: #ff8f8f;
+    }
+
+    .mensaje.success {
+        background: rgba(60, 255, 130, 0.15);
+        border-left: 4px solid #3cff82;
+        color: #a4ffca;
     }
 
 </style>

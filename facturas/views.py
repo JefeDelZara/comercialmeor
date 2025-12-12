@@ -1,60 +1,72 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from .models import Pedido
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-from reportlab.pdfgen import canvas
+from .models import Pedido
 
 def generar_factura(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
 
-    # Crear la respuesta HTTP con tipo de contenido PDF
+    # Crear respuesta PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="factura_{pedido.id}.pdf"'
 
-    # Crear un objeto de PDF
-    pdf = canvas.Canvas(response, pagesize=letter)
-    width, height = letter  # Medidas de la página (ancho, alto)
+    # PDF con márgenes
+    pdf = SimpleDocTemplate(response, pagesize=letter,
+                            rightMargin=40, leftMargin=40,
+                            topMargin=60, bottomMargin=40)
 
-    # Título de la factura
-    pdf.setFont("Helvetica-Bold", 18)
-    pdf.drawString(200, height - 40, f"Factura - Pedido #{pedido.id}")
+    styles = getSampleStyleSheet()
+    elementos = []
 
-    # Detalles del usuario
-    pdf.setFont("Helvetica", 12)
-    pdf.drawString(30, height - 80, f"Nombre de usuario: {pedido.usuario.username}")
-    pdf.drawString(30, height - 100, f"Correo: {pedido.usuario.email}")
+    # Título
+    titulo = Paragraph(f"<b>Factura - Pedido #{pedido.id}</b>", styles["Title"])
+    elementos.append(titulo)
+    elementos.append(Spacer(1, 20))
 
-    # Verificar si el teléfono está disponible en el usuario, si no, poner "No disponible"
+    # Datos del usuario
+    cliente_info = f"""
+    <b>Cliente:</b> {pedido.usuario.username}<br/>
+    <b>Correo:</b> {pedido.usuario.email}<br/>
+    """
+    elementos.append(Paragraph(cliente_info, styles["Normal"]))
+    elementos.append(Spacer(1, 20))
 
-
-    # Detalles de los productos en el pedido
-    y_position = height - 160
-    pdf.drawString(30, y_position, "Productos:")
-    y_position -= 20
-    pdf.setFont("Helvetica", 10)
+    # Tabla de productos
+    data = [["Producto", "Cantidad", "Precio Total"]]
 
     total = 0
     for detalle in pedido.detallepedido_set.all():
-        producto = detalle.producto
-        cantidad = detalle.cantidad
-        precio_total = detalle.total_producto
-        total += precio_total
-        pdf.drawString(30, y_position, f"{producto.nombre} (x{cantidad}) - ${precio_total}")
-        y_position -= 20
+        data.append([
+            detalle.producto.nombre,
+            str(detalle.cantidad),
+            f"${detalle.total_producto}"
+        ])
+        total += detalle.total_producto
 
-    # Subtotal
-    y_position -= 20
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(30, y_position, f"Subtotal: ${total}")
+    # Agregar total
+    data.append(["", "<b>Subtotal</b>", f"<b>${total}</b>"])
+
+    tabla = Table(data, colWidths=[260, 80, 100])
+    tabla.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8e8e8")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+        ("ALIGN", (1, 1), (-1, -1), "CENTER"),
+        ("GRID", (0, 0), (-1, -1), 0.6, colors.grey),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("FONTSIZE", (0, 0), (-1, -1), 10),
+    ]))
+
+    elementos.append(tabla)
+    elementos.append(Spacer(1, 30))
 
     # Mensaje final
-    y_position -= 40
-    pdf.setFont("Helvetica", 12)
-    pdf.drawString(30, y_position, "Gracias por preferirnos.")
+    elementos.append(Paragraph("Gracias por su compra.", styles["Normal"]))
 
-    # Finalizar la creación del PDF
-    pdf.showPage()
-    pdf.save()
+    # Construir PDF
+    pdf.build(elementos)
 
     return response
